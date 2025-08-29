@@ -16,6 +16,7 @@ export const createAppRouter = () => {
   const router = createRouter({
     routeTree,
     context: { queryClient },
+    trailingSlash: 'always', // 폴더명이 띄어쓰기로 끝나면 URL에서 제거되는 문제가 있어서 슬래시 강제 추가
     defaultPreload: 'intent',
     scrollRestoration: true,
     defaultStructuralSharing: true,

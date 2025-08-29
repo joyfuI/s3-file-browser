@@ -35,9 +35,7 @@ export const ls = async (path: string) => {
     // 파일 추가
     response.Contents.forEach((item) => {
       if (item.Key && item.Key !== prefix) {
-        const encodeKey = item.Key.split('/')
-          .map((part) => encodeURIComponent(part))
-          .join('/'); // 경로는 그대로 두고 파일명만 인코딩
+        const encodeKey = item.Key.split('/').map(encodeURIComponent).join('/'); // /는 그대로 두고 인코딩
         const url = env.VITE_DOWNLOAD_URL
           ? `${env.VITE_DOWNLOAD_URL}/${encodeKey}`
           : `https://s3.${env.VITE_AWS_REGION}.amazonaws.com/${env.VITE_S3_BUCKET_NAME}/${encodeKey}`;
@@ -82,10 +80,7 @@ export const rmdir = async (path: string) => {
   if (response.Contents) {
     const promise = response.Contents.filter(
       (item): item is S3Object & { Key: string } => !!item.Key,
-    ).map((item) => {
-      // 폴더 내 파일 삭제
-      return deleteObject(item.Key);
-    });
+    ).map((item) => deleteObject(item.Key)); // 폴더 내 파일 삭제
     await Promise.all(promise);
   }
 };
