@@ -4,7 +4,7 @@ AWS S3 파일 브라우저
 
 ## 설정
 
-1. 프로젝트 루트에 `.env.local` 파일 생성:
+1. 프로젝트 루트에 `.env.local` 파일 생성
 
 ```env
 VITE_AWS_ACCESS_KEY_ID=your-access-key-here
@@ -15,13 +15,13 @@ VITE_DOWNLOAD_URL=https://s3.download.com (optional)
 VITE_PUBLIC_ACL=true (optional)
 ```
 
-2. 패키지 설치:
+2. 패키지 설치
 
 ```bash
 pnpm install
 ```
 
-3. 개발 서버 실행:
+3. 개발 서버 실행
 
 ```bash
 pnpm run dev
@@ -31,7 +31,7 @@ pnpm run dev
 
 ### IAM 권한
 
-IAM 사용자에게 다음 권한이 필요합니다:
+IAM 사용자에게 다음 권한이 필요합니다.
 
 - `s3:ListBucket`
 - `s3:GetObject`
@@ -41,7 +41,7 @@ IAM 사용자에게 다음 권한이 필요합니다:
 
 ### S3 CORS 설정
 
-브라우저에서 직접 접근하려면 CORS 설정이 필요합니다:
+브라우저에서 직접 접근하려면 CORS 설정이 필요합니다.
 
 ```json
 [
@@ -55,10 +55,32 @@ IAM 사용자에게 다음 권한이 필요합니다:
 
 ### S3 버킷 ACL 설정
 
-업로드된 파일이 퍼블릭 액세스 가능하도록 하려면 (VITE_PUBLIC_ACL=true):
+업로드된 파일이 퍼블릭 액세스 가능하도록 하려면 (VITE_PUBLIC_ACL=true)
 
 1. **S3 콘솔** → **버킷** → **권한** → **객체 소유권**
 2. **ACL 활성화됨** 선택
 3. **퍼블릭 액세스 차단** 설정에서 다음 체크 해제:
    - "새 ACL을 통해 부여된 버킷 및 객체에 대한 퍼블릭 액세스 차단"
    - "임의의 ACL을 통해 부여된 버킷 및 객체에 대한 퍼블릭 액세스 차단"
+
+## 실행 파일 패키징
+
+[redbean](https://redbean.dev/)을 사용해 윈도우/리눅스/맥/BSD에서 실행 가능한 단일 파일로 만들 수 있습니다.
+
+1. 패키지 설치
+
+```bash
+pnpm install
+```
+
+2. 빌드
+
+```bash
+pnpm run build
+```
+
+3. 패키징 (myapp.com)
+
+```bash
+pnpm run compile
+```
