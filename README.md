@@ -2,6 +2,8 @@
 
 AWS S3 파일 브라우저
 
+관련 잡담은 [https://blog.joyfui.com/1306](https://blog.joyfui.com/1306)
+
 ## 설정
 
 1. 프로젝트 루트에 `.env.local` 파일 생성

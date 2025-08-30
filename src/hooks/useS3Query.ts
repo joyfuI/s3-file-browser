@@ -1,13 +1,13 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 
 import { ls, mkdir, rm, rmdir, upload } from '@/helpers/s3Handler';
 
 export const useLs = (path: string) =>
-  useQuery({
-    queryKey: ['s3', 'ls', path],
-    queryFn: () => ls(path),
-    placeholderData: [],
-  });
+  useSuspenseQuery({ queryKey: ['s3', 'ls', path], queryFn: () => ls(path) });
 
 export const useMkdir = (path: string) => {
   const queryClient = useQueryClient();

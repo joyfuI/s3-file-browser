@@ -2,10 +2,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import type { SnackbarCloseReason } from '@mui/material/Snackbar';
 import Snackbar from '@mui/material/Snackbar';
-import { useIsFetching, useIsMutating } from '@tanstack/react-query';
 
 import Confirm from '@/components/Confirm';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import Prompt from '@/components/Prompt';
 import { useAlert, useConfirm, usePrompt } from '@/hooks/useDialog';
 
@@ -13,9 +11,6 @@ const GlobalElements = () => {
   const [alert, setAlert] = useAlert();
   const [confirm, setConfirm] = useConfirm();
   const [prompt, setPrompt] = usePrompt();
-
-  const isFetching = useIsFetching();
-  const isMutating = useIsMutating();
 
   const handleSnackbarClose = (
     _event: React.SyntheticEvent | Event,
@@ -50,7 +45,6 @@ const GlobalElements = () => {
 
   return (
     <>
-      <LoadingSpinner open={!!(isFetching || isMutating)} />
       <Snackbar
         action={action}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}

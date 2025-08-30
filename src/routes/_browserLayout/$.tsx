@@ -9,11 +9,11 @@ import Tooltip from '@mui/material/Tooltip';
 import { useQueryClient } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 
-import FileList from '@/components/FileList';
+import FileList from '@/components/layouts/FileList';
 import PathBreadcrumb from '@/components/PathBreadcrumb';
 import UploadButton from '@/components/UploadButton';
 import useDialog from '@/hooks/useDialog';
-import { useLs, useMkdir, useUpload } from '@/hooks/useS3Query';
+import { useMkdir, useUpload } from '@/hooks/useS3Query';
 
 const App = () => {
   const { _splat } = Route.useParams();
@@ -22,7 +22,6 @@ const App = () => {
   const queryClient = useQueryClient();
   const { alert, prompt } = useDialog();
 
-  const { data } = useLs(path);
   const { mutate: uploadMutate } = useUpload(path);
   const { mutate: mkdirMutate } = useMkdir(path);
 
@@ -55,7 +54,7 @@ const App = () => {
   };
 
   const handleReloadClick = async () => {
-    queryClient.invalidateQueries({ queryKey: ['s3', 'ls', path] });
+    queryClient.resetQueries({ queryKey: ['s3', 'ls', path] });
   };
 
   return (
@@ -86,7 +85,7 @@ const App = () => {
         <PathBreadcrumb path={_splat ?? ''} />
       </Stack>
 
-      <FileList list={data ?? []} />
+      <FileList path={path} />
     </Box>
   );
 };
