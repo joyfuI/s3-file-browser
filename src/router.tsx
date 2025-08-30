@@ -8,6 +8,7 @@ export const createAppRouter = () => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
+        retry: 1,
         staleTime: Infinity,
         // refetchOnWindowFocus: false,
       },

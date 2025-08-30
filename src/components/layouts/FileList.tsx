@@ -7,9 +7,12 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import { QueryErrorResetBoundary } from '@tanstack/react-query';
+import { ErrorBoundary } from 'react-error-boundary';
 
 import type { S3Object } from '@/helpers/s3Handler';
 import useDialog from '@/hooks/useDialog';
+import useQueryData from '@/hooks/useQueryData';
 import { useRm, useRmdir } from '@/hooks/useS3Query';
 
 import FileListBody from './FileListBody';
@@ -18,6 +21,7 @@ type FileListProps = { path: string };
 
 const FileList = ({ path }: FileListProps) => {
   const { alert, confirm } = useDialog();
+  const [retryCount] = useQueryData(['retryCount'], 0);
 
   const { mutate: rmMutate } = useRm();
   const { mutate: rmdirMutate } = useRmdir();
@@ -66,17 +70,33 @@ const FileList = ({ path }: FileListProps) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          <Suspense
-            fallback={
-              <TableRow>
-                <TableCell align="center" colSpan={5} sx={{ padding: 5 }}>
-                  <CircularProgress />
-                </TableCell>
-              </TableRow>
-            }
-          >
-            <FileListBody onDeleteClick={handleDeleteClick} path={path} />
-          </Suspense>
+          <QueryErrorResetBoundary>
+            {({ reset }) => (
+              <ErrorBoundary
+                fallbackRender={({ error }) => (
+                  <TableRow>
+                    <TableCell align="center" colSpan={5} sx={{ padding: 5 }}>
+                      {error.message}
+                    </TableCell>
+                  </TableRow>
+                )}
+                onReset={reset}
+                resetKeys={[path, retryCount]}
+              >
+                <Suspense
+                  fallback={
+                    <TableRow>
+                      <TableCell align="center" colSpan={5} sx={{ padding: 5 }}>
+                        <CircularProgress />
+                      </TableCell>
+                    </TableRow>
+                  }
+                >
+                  <FileListBody onDeleteClick={handleDeleteClick} path={path} />
+                </Suspense>
+              </ErrorBoundary>
+            )}
+          </QueryErrorResetBoundary>
         </TableBody>
       </Table>
     </TableContainer>

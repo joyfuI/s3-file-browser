@@ -13,6 +13,7 @@ import FileList from '@/components/layouts/FileList';
 import PathBreadcrumb from '@/components/PathBreadcrumb';
 import UploadButton from '@/components/UploadButton';
 import useDialog from '@/hooks/useDialog';
+import useQueryData from '@/hooks/useQueryData';
 import { useMkdir, useUpload } from '@/hooks/useS3Query';
 
 const App = () => {
@@ -21,6 +22,7 @@ const App = () => {
 
   const queryClient = useQueryClient();
   const { alert, prompt } = useDialog();
+  const [, setRetryCount] = useQueryData(['retryCount'], 0);
 
   const { mutate: uploadMutate } = useUpload(path);
   const { mutate: mkdirMutate } = useMkdir(path);
@@ -55,6 +57,7 @@ const App = () => {
 
   const handleReloadClick = async () => {
     queryClient.resetQueries({ queryKey: ['s3', 'ls', path] });
+    setRetryCount((prev) => prev + 1); // 오류 경계 재설정
   };
 
   return (
