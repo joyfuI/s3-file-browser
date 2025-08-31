@@ -23,7 +23,7 @@ const Prompt = ({
 }: PromptProps) => {
   const formId = useId();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const value = formData.get('value')?.toString() ?? '';

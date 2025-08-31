@@ -2,13 +2,13 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import { useQueryClient } from '@tanstack/react-query';
 import { createFileRoute, Outlet, useRouter } from '@tanstack/react-router';
 
+import Button from '@/components/Button';
 import PathBreadcrumb from '@/components/PathBreadcrumb';
 import UploadButton from '@/components/UploadButton';
 import useDialog from '@/hooks/useDialog';
@@ -24,7 +24,9 @@ const Component = () => {
   const { mutate: uploadMutate } = useUpload(path);
   const { mutate: mkdirMutate } = useMkdir(path);
 
-  const handleUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUploadChange: React.ChangeEventHandler<HTMLInputElement> = (
+    event,
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
       uploadMutate(file, {
@@ -53,8 +55,8 @@ const Component = () => {
   };
 
   const handleReloadClick = async () => {
-    queryClient.resetQueries({ queryKey: ['s3', 'ls', path] });
-    router.invalidate(); // 오류 경계 재설정
+    await queryClient.resetQueries({ queryKey: ['s3', 'ls', path] });
+    await router.invalidate(); // 오류 경계 재설정
   };
 
   return (
