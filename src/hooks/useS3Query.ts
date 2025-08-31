@@ -4,10 +4,10 @@ import {
   useSuspenseQuery,
 } from '@tanstack/react-query';
 
-import { ls, mkdir, rm, rmdir, upload } from '@/helpers/s3Handler';
+import { lsQueryOptions } from '@/helpers/QueryOptions';
+import { mkdir, rm, rmdir, upload } from '@/helpers/s3Handler';
 
-export const useLs = (path: string) =>
-  useSuspenseQuery({ queryKey: ['s3', 'ls', path], queryFn: () => ls(path) });
+export const useLs = (path: string) => useSuspenseQuery(lsQueryOptions(path));
 
 export const useMkdir = (path: string) => {
   const queryClient = useQueryClient();

@@ -11,7 +11,7 @@ const PathBreadcrumb = ({ path }: { path: string }) => {
   return (
     <Breadcrumbs>
       {currentPath ? (
-        <Link color="inherit" params={{ _splat: '' }} to="/$" underline="hover">
+        <Link color="inherit" to="../" underline="hover">
           root
         </Link>
       ) : (

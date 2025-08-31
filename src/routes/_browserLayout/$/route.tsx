@@ -7,22 +7,19 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import { useQueryClient } from '@tanstack/react-query';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Outlet, useRouter } from '@tanstack/react-router';
 
-import FileList from '@/components/layouts/FileList';
 import PathBreadcrumb from '@/components/PathBreadcrumb';
 import UploadButton from '@/components/UploadButton';
 import useDialog from '@/hooks/useDialog';
-import useQueryData from '@/hooks/useQueryData';
 import { useMkdir, useUpload } from '@/hooks/useS3Query';
 
-const App = () => {
-  const { _splat } = Route.useParams();
-  const path = _splat ?? '';
+const Component = () => {
+  const { _splat: path = '' } = Route.useParams();
 
+  const router = useRouter();
   const queryClient = useQueryClient();
   const { alert, prompt } = useDialog();
-  const [, setRetryCount] = useQueryData(['retryCount'], 0);
 
   const { mutate: uploadMutate } = useUpload(path);
   const { mutate: mkdirMutate } = useMkdir(path);
@@ -57,7 +54,7 @@ const App = () => {
 
   const handleReloadClick = async () => {
     queryClient.resetQueries({ queryKey: ['s3', 'ls', path] });
-    setRetryCount((prev) => prev + 1); // 오류 경계 재설정
+    router.invalidate(); // 오류 경계 재설정
   };
 
   return (
@@ -85,12 +82,14 @@ const App = () => {
           </Tooltip>
         </ButtonGroup>
 
-        <PathBreadcrumb path={_splat ?? ''} />
+        <PathBreadcrumb path={path} />
       </Stack>
 
-      <FileList path={path} />
+      <Outlet />
     </Box>
   );
 };
 
-export const Route = createFileRoute('/_browserLayout/$')({ component: App });
+export const Route = createFileRoute('/_browserLayout/$')({
+  component: Component,
+});

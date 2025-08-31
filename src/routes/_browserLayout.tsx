@@ -5,7 +5,7 @@ import { createFileRoute, Outlet } from '@tanstack/react-router';
 import GlobalElements from '@/components/layouts/GlobalElements';
 import { env } from '@/env';
 
-const BrowserLayout = () => {
+const LayoutComponent = () => {
   return (
     <>
       <Container sx={{ padding: 5 }}>
@@ -22,5 +22,5 @@ const BrowserLayout = () => {
 };
 
 export const Route = createFileRoute('/_browserLayout')({
-  component: BrowserLayout,
+  component: LayoutComponent,
 });

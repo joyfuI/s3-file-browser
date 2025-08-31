@@ -10,35 +10,56 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as BrowserLayoutRouteImport } from './routes/_browserLayout'
-import { Route as BrowserLayoutSplatRouteImport } from './routes/_browserLayout/$'
+import { Route as BrowserLayoutSplatRouteRouteImport } from './routes/_browserLayout/$/route'
+import { Route as BrowserLayoutSplatFileListLayoutRouteImport } from './routes/_browserLayout/$/_fileListLayout'
+import { Route as BrowserLayoutSplatFileListLayoutIndexRouteImport } from './routes/_browserLayout/$/_fileListLayout/index'
 
 const BrowserLayoutRoute = BrowserLayoutRouteImport.update({
   id: '/_browserLayout',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BrowserLayoutSplatRoute = BrowserLayoutSplatRouteImport.update({
+const BrowserLayoutSplatRouteRoute = BrowserLayoutSplatRouteRouteImport.update({
   id: '/$',
   path: '/$',
   getParentRoute: () => BrowserLayoutRoute,
 } as any)
+const BrowserLayoutSplatFileListLayoutRoute =
+  BrowserLayoutSplatFileListLayoutRouteImport.update({
+    id: '/_fileListLayout',
+    getParentRoute: () => BrowserLayoutSplatRouteRoute,
+  } as any)
+const BrowserLayoutSplatFileListLayoutIndexRoute =
+  BrowserLayoutSplatFileListLayoutIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => BrowserLayoutSplatFileListLayoutRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/$': typeof BrowserLayoutSplatRoute
+  '/$': typeof BrowserLayoutSplatFileListLayoutRouteWithChildren
+  '/$/': typeof BrowserLayoutSplatFileListLayoutIndexRoute
 }
 export interface FileRoutesByTo {
-  '/$': typeof BrowserLayoutSplatRoute
+  '/$': typeof BrowserLayoutSplatFileListLayoutIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_browserLayout': typeof BrowserLayoutRouteWithChildren
-  '/_browserLayout/$': typeof BrowserLayoutSplatRoute
+  '/_browserLayout/$': typeof BrowserLayoutSplatRouteRouteWithChildren
+  '/_browserLayout/$/_fileListLayout': typeof BrowserLayoutSplatFileListLayoutRouteWithChildren
+  '/_browserLayout/$/_fileListLayout/': typeof BrowserLayoutSplatFileListLayoutIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/$'
+  fullPaths: '/$' | '/$/'
   fileRoutesByTo: FileRoutesByTo
   to: '/$'
-  id: '__root__' | '/_browserLayout' | '/_browserLayout/$'
+  id:
+    | '__root__'
+    | '/_browserLayout'
+    | '/_browserLayout/$'
+    | '/_browserLayout/$/_fileListLayout'
+    | '/_browserLayout/$/_fileListLayout/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -58,18 +79,62 @@ declare module '@tanstack/react-router' {
       id: '/_browserLayout/$'
       path: '/$'
       fullPath: '/$'
-      preLoaderRoute: typeof BrowserLayoutSplatRouteImport
+      preLoaderRoute: typeof BrowserLayoutSplatRouteRouteImport
       parentRoute: typeof BrowserLayoutRoute
+    }
+    '/_browserLayout/$/_fileListLayout': {
+      id: '/_browserLayout/$/_fileListLayout'
+      path: ''
+      fullPath: '/$'
+      preLoaderRoute: typeof BrowserLayoutSplatFileListLayoutRouteImport
+      parentRoute: typeof BrowserLayoutSplatRouteRoute
+    }
+    '/_browserLayout/$/_fileListLayout/': {
+      id: '/_browserLayout/$/_fileListLayout/'
+      path: '/'
+      fullPath: '/$/'
+      preLoaderRoute: typeof BrowserLayoutSplatFileListLayoutIndexRouteImport
+      parentRoute: typeof BrowserLayoutSplatFileListLayoutRoute
     }
   }
 }
 
+interface BrowserLayoutSplatFileListLayoutRouteChildren {
+  BrowserLayoutSplatFileListLayoutIndexRoute: typeof BrowserLayoutSplatFileListLayoutIndexRoute
+}
+
+const BrowserLayoutSplatFileListLayoutRouteChildren: BrowserLayoutSplatFileListLayoutRouteChildren =
+  {
+    BrowserLayoutSplatFileListLayoutIndexRoute:
+      BrowserLayoutSplatFileListLayoutIndexRoute,
+  }
+
+const BrowserLayoutSplatFileListLayoutRouteWithChildren =
+  BrowserLayoutSplatFileListLayoutRoute._addFileChildren(
+    BrowserLayoutSplatFileListLayoutRouteChildren,
+  )
+
+interface BrowserLayoutSplatRouteRouteChildren {
+  BrowserLayoutSplatFileListLayoutRoute: typeof BrowserLayoutSplatFileListLayoutRouteWithChildren
+}
+
+const BrowserLayoutSplatRouteRouteChildren: BrowserLayoutSplatRouteRouteChildren =
+  {
+    BrowserLayoutSplatFileListLayoutRoute:
+      BrowserLayoutSplatFileListLayoutRouteWithChildren,
+  }
+
+const BrowserLayoutSplatRouteRouteWithChildren =
+  BrowserLayoutSplatRouteRoute._addFileChildren(
+    BrowserLayoutSplatRouteRouteChildren,
+  )
+
 interface BrowserLayoutRouteChildren {
-  BrowserLayoutSplatRoute: typeof BrowserLayoutSplatRoute
+  BrowserLayoutSplatRouteRoute: typeof BrowserLayoutSplatRouteRouteWithChildren
 }
 
 const BrowserLayoutRouteChildren: BrowserLayoutRouteChildren = {
-  BrowserLayoutSplatRoute: BrowserLayoutSplatRoute,
+  BrowserLayoutSplatRouteRoute: BrowserLayoutSplatRouteRouteWithChildren,
 }
 
 const BrowserLayoutRouteWithChildren = BrowserLayoutRoute._addFileChildren(

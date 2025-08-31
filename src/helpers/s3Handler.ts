@@ -20,7 +20,7 @@ export const ls = async (path: string) => {
 
   if (!response.CommonPrefixes?.length && !response.Contents?.length) {
     // 잘못된 경로일 때
-    throw new Error('잘못된 경로입니다');
+    throw new Error('잘못된 경로입니다.');
   }
 
   if (response.CommonPrefixes) {
