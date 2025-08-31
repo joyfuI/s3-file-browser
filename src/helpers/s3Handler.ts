@@ -65,12 +65,12 @@ export const ls = async (path: string) => {
 };
 
 export const mkdir = async (path: string, name: string) => {
-  const folderKey = path.endsWith('/') ? path : `${path}/`;
+  const folderKey = path === '' || path.endsWith('/') ? path : `${path}/`;
   await putObject(`${folderKey}${name}/`, '', 'application/x-directory');
 };
 
 export const upload = async (path: string, file: File) => {
-  const fileKey = path.endsWith('/') ? path : `${path}/`;
+  const fileKey = path === '' || path.endsWith('/') ? path : `${path}/`;
   const arrayBuffer = await file.arrayBuffer();
   const fileBuffer = new Uint8Array(arrayBuffer);
   await putObject(`${fileKey}${file.name}`, fileBuffer, file.type);
