@@ -19,7 +19,12 @@ export const env = createEnv({
     VITE_AWS_REGION: z.string().default('ap-northeast-2'),
     VITE_S3_BUCKET_NAME: z.string(),
     VITE_DOWNLOAD_URL: z.url().optional(),
-    VITE_PUBLIC_ACL: z.boolean().optional().default(true),
+    VITE_PUBLIC_ACL: z
+      .string()
+      .optional()
+      .default('true')
+      .refine((s) => s === 'true' || s === 'false')
+      .transform((s) => s === 'true'),
   },
 
   /**
